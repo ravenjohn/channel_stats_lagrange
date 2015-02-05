@@ -24,6 +24,7 @@ var mysql   = require('anytv-node-mysql'),
     data = {},
 
     start = function () {
+        //get all data
         mysql.open(config)
             .query('SELECT * FROM channel_stats WHERE channel_id = ?'
                 +' ORDER BY insert_date asc', [process.argv[2]], get_days)
@@ -37,6 +38,7 @@ var mysql   = require('anytv-node-mysql'),
             console.log('Error getting limit');
         }
 
+        //indices based on how many days from the first data
         result.forEach(function(row) {
             var date    = row.insert_date;
             data[moment.duration(moment(date).diff(moment(first))).asDays()] = row;
@@ -71,12 +73,7 @@ var mysql   = require('anytv-node-mysql'),
             date,
             missing = [],
             ipolate = {},
-            last_month,
             last_missing;
-
-        if (last_month) {
-
-        }
 
         last_missing = 0;
         missing = [];
