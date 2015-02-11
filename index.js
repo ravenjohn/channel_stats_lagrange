@@ -22,12 +22,24 @@ var mysql   = require('anytv-node-mysql'),
     },
     first,
     data = {},
+    
+    starter_than_start = function () {
+          
+        mysql.open(config)
+            .query('SELECT channel_id FROM mcn_channels', function (err, result) {
+                if (err) {
+                    return console.log(err);
+                }
+                result.forEach(start);
+            })
+            .end();
+    },
 
-    start = function () {
+    start = function (a) {
         //get all data
         mysql.open(config)
             .query('SELECT * FROM channel_stats WHERE channel_id = ?'
-                +' ORDER BY insert_date asc', [process.argv[2]], get_days)
+                +' ORDER BY insert_date asc', a.channel_id, get_days)
             .end();
     },
 
@@ -211,5 +223,5 @@ var mysql   = require('anytv-node-mysql'),
         return toreturn;
     };
 
-start();
+starter_than_start();
 })();
